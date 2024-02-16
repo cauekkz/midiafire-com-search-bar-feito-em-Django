@@ -6,8 +6,23 @@ settings
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'fastFile/css/styles.css'%}">
+    <link rel="stylesheet" href="{% static 'fastFile/css/settings.css'%}">
 {% endblock %}
 
 {% block body %}
-    
+<h1>Edit</h1>
+
+    <menu>
+        <li class="li-settings">name</li>
+        <li class="li-settings">password</li>
+        <li class="li-settings">email</li>
+        <li class="li-settings">delete perfil</li>
+    </menu>
+    <footer>
+        
+    </footer>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'fastFile/js/settings.js' %}"></script>
 {% endblock %}

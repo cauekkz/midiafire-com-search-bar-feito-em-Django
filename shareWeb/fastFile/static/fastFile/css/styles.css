@@ -42,22 +42,7 @@ input[type='search']:focus{
     outline: none;
     border: 2px solid #000000;
 }
-    
-#div-filter{
-    width: 20%;
-    background-color: rgb(119, 100, 35);
-    
-}
-#form-filter{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-}
-#form-filter select{
-    border-radius: 5px;
-}
+
 /*erro message*/
 @keyframes error-animation {
     0%{
@@ -92,7 +77,7 @@ input[type='search']:focus{
     justify-content: center;
     align-items: center;
 }
-
+/* nav pages search */
 #nav-pages{
     width: 100%;
     display: flex;
