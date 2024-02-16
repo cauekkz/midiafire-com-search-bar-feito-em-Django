@@ -1,4 +1,7 @@
+
 db.sqlite3
-shareFiles/__pycache__/*
+
 fastFile/migrations/*
-fastFile/__pycache__/*
+
+
+.gitignore
