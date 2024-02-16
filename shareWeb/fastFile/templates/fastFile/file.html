@@ -1,0 +1,28 @@
+{% extends "fastFile/layout.html" %}
+{% block title %}
+    {{name}}
+{% endblock %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'fastFile/file.css'%}">
+{% endblock %}
+
+{% block body %}
+    <div id="div-h1">
+        <h1>{{name}}</h1>
+    </div>
+    <div id="div-h2-h3">
+        <h3>Upload By: <a href="{% url 'perfil' username=author %}">{{author}}</a></h2>
+        <h3>{{dateAndTime}}</h3>
+    </div>
+    <div id="div-download">
+        <a href="{% url 'download' fileName=name %}" id="download">
+            
+                <h2>download</h2>
+            
+        </a>
+        <h3>{{downloads}} Downloads</h3>
+    </div>
+    
+{% endblock %}

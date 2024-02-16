@@ -1,0 +1,32 @@
+{% extends "fastFile/layout.html" %}
+{% block title %}
+    login
+{% endblock %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'fastFile/login.css'%}">
+{% endblock %}
+
+{% block body %}
+    <div id="div-form-login">
+        <h1>Login</h1>
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+           
+            {% if message%}
+                <span class="error-login">{{message}}</span>
+            {% endif %}
+            <div class="form-group">
+                <label  for="username">username</label>
+                <input autofocus required class="form-control" id="username" type="text" name="username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label for="password">password</label>
+                <input class="form-control" required id="password" type="password" name="password" placeholder="password">
+            </div>
+            <button  type="submit" >Login</button>        
+        </form>
+    </div>
+    
+{% endblock %}

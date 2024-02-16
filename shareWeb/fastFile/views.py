@@ -1,0 +1,388 @@
+from django.shortcuts import render, redirect
+from django.http import JsonResponse, FileResponse
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError 
+from django.db.models import Q
+from django.contrib.auth.hashers import make_password, check_password
+from django.core.paginator import Paginator
+
+from .models import *
+
+import json
+from . import util
+# Create your views here.
+
+def index(request):
+    if request.method == 'GET':
+
+        number = request.GET.get('page')
+        page, pageLinks =  util.nav_page( number ,File.objects.order_by('-downloadsCount'))
+        if pageLinks is None and page is not None:
+            return render(request, "fastFile/index.html",{
+                'page':page,
+            })
+        elif pageLinks is None and page is None:
+            return render(request, "fastFile/index.html", {
+                "message": 'Page not exist'  
+            })
+        else:
+            return render(request,"fastFile/index.html",{
+                'page':page,
+                'linkPages':pageLinks
+            })
+    
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('index')
+        else:
+            return render(request,'fastFile/login.html',{
+                'message':'Invalid username and/or password'
+            })
+    else:
+        return render(request,'fastFile/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
+
+def register(request):
+
+    if request.method == "POST":
+        
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        confirmation = request.POST['confirmation']
+        if password != confirmation:
+            return render(request,'fastFile/register.html',{
+                'message':'The passwords must match'
+            })
+        
+        userExist = User.objects.filter(Q(username=username) | Q(email=email))
+        if userExist.exists():
+            if userExist.first().username == username:
+                return render(request,'fastFile/register.html',{
+                'message':'This username exist'
+            })
+            else:
+                return render(request,'fastFile/register.html',{
+                'message':'This email exist'
+            })
+        
+        user = User.objects.create_user(username, email, password)
+        user.save()
+        
+            
+        login(request,user)
+        return redirect('index')
+    else:
+        return render(request,'fastFile/register.html')
+
+def search(request):
+    if request.method !='GET':
+        return render(request,'fastFile/index.html',{
+                    'message':'This method not allow'
+        }) 
+    q = request.GET.get('q',None)
+    if q is None:
+        return render(request,'fastFile/index.html',{
+                    'message':'where is the query?'
+        })
+    number = request.GET.get('page')
+    files = File.objects.filter(name__icontains=q).order_by('-downloadsCount')
+    
+    page, pageLinks =  util.nav_page( number,files)
+    if pageLinks is None and page is not None:
+            return render(request, "fastFile/index.html",{
+                'page':page,
+            })
+    elif pageLinks is None and page is None:
+            return render(request, "fastFile/index.html", {
+                "message": 'Page not exist'  
+            })
+    else:
+            return render(request,"fastFile/index.html",{
+                'page':page,
+                'linkPages':pageLinks
+            })
+
+def fileName(request,fileName):
+    file = File.objects.filter(name=fileName)
+    if file.exists():
+        file = file.first()
+
+        if file.userPermition or file.password != None:
+            if request.user in file.allowedUsers.all():
+                return render(request, 'fastFile/file.html',{
+                    'name':file.name,
+                    'author':file.postedBy,
+                    'dateAndTime':file.postedAt,
+                    'downloads':file.downloadsCount
+                })
+            
+            else:
+                return render(request,'fastFile/index.html',{
+                    'message':'You not have permition'
+                }) 
+        else:
+            return render(request, 'fastFile/file.html',{
+                    'name':file.name,
+                    'author':file.postedBy,
+                    'dateAndTime':file.postedAt,
+                    'downloads':file.downloadsCount
+                })
+    
+    else:
+        return render(request,'fastFile/index.html',{
+            'message':'This file not exist'
+        })    
+
+def download_file(request,fileName):
+    
+    file = File.objects.filter(name=fileName)
+    
+    if file.exists():
+        file = file.first()
+        if file.userPermition or file.password != None:
+            if request.user in file.allowedUsers.all():
+            
+                content = open(file.file.path,'rb')
+                response = FileResponse(content)
+                response['Content-Disposition'] = 'attachment; filename="%s"' % file.file.name
+
+                
+            else:
+                #change after to redirect('search' filename=fileName)
+                return render(request,'fastFile/index.html',{
+                    'message':'You not have permition'
+                })
+        else:
+            content = open(file.file.path,'rb')
+            response = FileResponse(content)
+            response['Content-Disposition'] = 'attachment; filename="%s"' % file.file.name
+
+            
+        if request.session.get('lastDownload', None) == None or request.session.get('lastDownload', None) != file.file.name:
+            file.downloadsCount += 1
+            file.save()
+        request.session['lastDownload'] = file.file.name
+
+        return response
+    else:
+        return render(request,'fastFile/index.html',{
+            'message':'This file not exist'
+        })
+
+@login_required
+def perfil(request,username):
+    if request.method == "GET":
+
+        number = request.GET.get('page')
+        user = User.objects.filter(username=username)
+        if not user.exists():
+            return render(request, "fastFile/perfil.html", {
+                "message": 'user not exist'  
+            })
+        user = user.first()
+        if request.user == user:
+            inbox = True
+            uploads = user.posteds.all()     
+                
+        else:
+            inbox = False
+            uploads = False
+
+        page, pageLinks =  util.nav_page( number ,File.objects.filter(postedBy=user).order_by('-downloadsCount'))
+        if pageLinks is None and page is not None:
+            return render(request, "fastFile/perfil.html",{
+                'inbox':inbox,
+                'page':page,
+                'uploads': uploads
+            })
+        elif pageLinks is None and page is None:
+            return render(request, "fastFile/perfil.html", {
+                'inbox':inbox,
+                "message": 'Page not exist',
+                'uploads': uploads 
+            })
+        else:
+            return render(request,"fastFile/perfil.html",{
+                'inbox':inbox,
+                'page':page,
+                'linkPages':pageLinks,
+                'uploads': uploads
+            })
+
+@login_required
+def upload(request):
+    if request.method == "GET":
+        return render(request,"fastFile/upload.html")
+    
+    fileName = request.POST.get('fileName', None)
+    password = request.POST.get('password', None)
+    confirmation = request.POST.get('confirmation', None)
+    file = request.FILES.get('file',None)
+    creatorPermition = request.POST.get('creatorPermition','off')
+    #confirm datas
+    if len(fileName) > 100:
+        return render(request,'fastFile/upload.html',{
+            'message':'file name must be less than 30 characters'
+        })
+    if len(password)  > 100:
+        return render(request,'fastFile/upload.html',{
+            'message':'password must be less than 20 characters'
+        })
+    if (password is not None and confirmation is not None) and (password != confirmation):
+        return render(request,'fastFile/upload.html',{
+            'message':'passwords must be the same'
+        })
+    if fileName is None or file is None:
+        return render(request,'fastFile/upload.html',{
+            'message':'The file name and file are nescessary'
+        })
+    if File.objects.filter(name=fileName).exists():
+        return render(request,'fastFile/upload.html',{
+            'message':'This file name exist'
+        }) 
+    
+    #creat file
+    
+    if password is not None and (password != '' and password != ' ' ):
+        if creatorPermition == 'on':
+            fileInfo = File.objects.create(
+            name=fileName,
+            postedBy=request.user,
+            file=file,
+            password=make_password(password),
+            userPermition=True,
+            )
+        else:
+            fileInfo = File.objects.create(
+            name=fileName,
+            postedBy=request.user,
+            file=file,
+            password=make_password(password),
+            )
+        fileInfo.allowedUsers.add(request.user)
+    else:
+        if creatorPermition == 'on':
+            fileInfo = File.objects.create(
+            name=fileName,
+            postedBy=request.user,
+            file=file,
+            userPermition=True,
+            )
+        else:
+            fileInfo = File.objects.create(
+            name=fileName,
+            postedBy=request.user,
+            file=file,
+            )
+        fileInfo.allowedUsers.add(request.user)
+
+        
+    fileInfo.save()
+    
+    return redirect('fileName', fileName=fileName)
+
+#APIs
+
+#user can request permition to download the file
+
+@login_required
+def requests(request):
+    if request.method != "POST":
+        return JsonResponse({"respost":"POST required "}, status=405)
+    
+    data = json.loads(request.body)
+    
+    type = data.get('type')
+    if type == 'lock':
+        title = data.get('name')
+        password = data.get('password')
+        file = File.objects.filter(name=title)
+        if file.exists():
+            file = file.first()
+                
+            if request.user in file.allowedUsers.all():
+                return JsonResponse({"respost":"you already have permission "}, status=302)
+                
+            if check_password(password,file.password):
+                file.allowedUsers.add(request.user)
+                file.save()
+                
+                return JsonResponse({"respost":"ok"}, status=202)
+            else:
+                return JsonResponse({"respost":"password incorrect"}, status=200)
+                    
+        else:
+            return JsonResponse({"respost":"This file not exist "}, status=404)
+    elif type == 'admin-permition':
+        title = data.get('name')
+        file = File.objects.filter(name=title)
+        if file.exists():
+            file = file.first()
+            if request.user in file.allowedUsers.all():
+                return JsonResponse({"respost":"has permission"}, status=200)
+            if request.user in file.messages.all():
+                return JsonResponse({"respost":"made"}, status=200)
+
+            file.messages.add(request.user)
+            file.save()
+            return JsonResponse({"respost":"ok"}, status=200)
+        else:
+            return JsonResponse({"respost":"This file not exist"}, status=404)
+        
+
+#admin can allow users
+@login_required
+def allowUser(request):
+    if request.method != "POST":
+        return JsonResponse({"respost":"POST required "}, status=405)
+    data = json.loads(request.body)
+    title = data.get('name')
+    decision = bool(data.get('decision'))
+
+    
+    file = File.objects.filter(name=title)
+    if file.exists():
+        file = file.first()
+        if file.postedBy == request.user:
+            username = data.get('username')
+            defendant = User.objects.filter(username=username)
+            
+            if defendant.exists():
+                defendant = defendant.first()
+                if decision:
+                    if defendant not in file.allowedUsers.all():
+                        file.allowedUsers.add(defendant)
+                        file.messages.remove(defendant)
+                        file.save()
+                        return JsonResponse({"respost":"made"}, status=200)
+                    else:
+                         
+                         file.messages.remove(defendant)
+                         file.save()
+                         return JsonResponse({"respost":"He already has permission"}, status=302)
+                else:
+                    if defendant in file.messages.all():
+                        file.allowedUsers.remove(defendant)
+                        file.messages.remove(defendant)
+                        file.save()
+                        return JsonResponse({"respost":"made"}, status=200)
+                    
+            else:
+                return JsonResponse({"respost":"This user not exist "}, status=404)
+        else:
+            return JsonResponse({"respost":"You are not the author "}, status=203)
+    else:
+        return JsonResponse({"respost":"This file not exist "}, status=404)
+

@@ -1,0 +1,49 @@
+body{
+    background-color: rgb(228, 182, 95);
+}
+main{
+    height: calc(100vh - 56px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around
+;
+}
+
+#div-h1{
+    display: flex;
+    justify-content: center;
+}
+#div-h2-h3{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#div-download{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 30%;
+
+}
+#download{
+    background-color: rgb(5, 149, 165);
+    width: 50%;
+    height: 100%;
+    border-radius: 10px;
+    color: orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: rgb(147, 107, 31);
+    border: 3px solid rgb(0, 0, 0);
+} 
+
+#download:hover{
+    text-decoration: none;
+    color: orange;
+    background-color: rgb(40, 102, 109);
+    border: 3px solid rgb(255, 255, 255);
+}

@@ -1,0 +1,104 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    min-height:100vh;
+    height: 100%;
+}
+#fast-span{
+    color: rgb(36, 172, 189);
+}
+#file-span{
+    color: orange;
+}
+/*Nav query and children styles */
+#nav-query{
+    background-color: black;
+    height: 10vh;
+    display: flex;
+}
+search{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(32, 91, 82);
+}
+#form-search-file{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+input[type='search']{
+    border-radius: 8px;
+    border: 1px solid rgb(70, 70, 70);
+    width: 50%;
+    height: 50%;
+    padding: 5px;
+    
+}
+input[type='search']:focus{
+    outline: none;
+    border: 2px solid #000000;
+}
+    
+#div-filter{
+    width: 20%;
+    background-color: rgb(119, 100, 35);
+    
+}
+#form-filter{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+#form-filter select{
+    border-radius: 5px;
+}
+/*erro message*/
+@keyframes error-animation {
+    0%{
+        transform: translateX(-5px)
+
+    }
+    25%{
+        transform: translateX(5px)
+
+    }
+    50%{
+        transform: translateX(-5px)
+
+    }
+    75%{
+        transform: translateX(5px)
+
+    }
+    100%{
+        transform: translateX(0%)
+    }
+
+}
+.div-error-login{
+    display: flex;
+    justify-content: center;
+}
+.error-login{
+    color: red;
+    animation: error-animation 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#nav-pages{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}     
+
+

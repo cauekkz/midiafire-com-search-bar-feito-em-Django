@@ -1,0 +1,31 @@
+#inbox-li{
+    position: relative;
+}
+
+#inbox{
+    background-color: rgb(203, 203, 203);
+    width: 20vw;
+    height: 20vh;
+    position: 0%;
+    right: 0%;
+    overflow-y: scroll;
+    border-radius: 5px;
+}
+.span-request{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.div-request{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content:space-between;
+}
+.btn-decision{
+    margin: 3px 0 3px 0;
+    background-color: orange;
+}

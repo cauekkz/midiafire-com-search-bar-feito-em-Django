@@ -1,0 +1,127 @@
+.link-file{
+    color:rgb(10, 176, 188);
+    width: 50%;
+    
+}
+dialog{
+    position: absolute;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+    background-color: rgb(210, 196, 120);    
+    padding: 5px;
+    z-index: 9999;
+    
+}
+dialog div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+    
+
+}
+.div-dialog-title{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#password-form{
+    display: flex;
+    height:80%;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+#password-form input[type='password']{
+    width: 60%;
+    padding: 2px;
+    height: 20%;
+    margin-right: 3px;
+    border: 1px solid black;
+}
+#password-form input[type='submit']{
+    border-radius: 4px;
+    height: 20%;
+    border: 1px solid black;
+}
+h3{
+    font-size:medium;
+}
+.link-file:hover{
+    color:rgb(20, 133, 142);
+    text-decoration: none;
+}
+
+#div-links{
+    padding: 5px;
+
+}
+body{
+    background-color: rgb(200, 200, 200);
+}
+article{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid black;
+    margin: 1px;
+    padding: 4px;
+    background-color: rgb(255, 253, 249);
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.111), 2px 2px 5px rgba(0, 0, 0, 0.523);
+    margin: 5px 0 5px 0;
+}
+.infos{
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 25%;
+}
+.requireds{
+    width: 50%;
+}
+.lock{
+    cursor: pointer;
+}
+.lock:hover{
+    filter: brightness(70%);
+}
+button {
+    transition-duration: 0.4s;
+    width: 50%;
+    border-radius: 5px;
+    background-color: rgb(190, 244, 255);
+    color: black
+}
+button:hover {
+    background-color: rgb(100, 148, 153); 
+    color: white;
+}
+#alert-email{
+    width: 23vw;
+    height: 10vh;
+    border-radius: 5px;
+    position: fixed;
+    top: 3%;
+    left: 38%;
+    background-color: rgb(198, 252, 252);
+    border: solid rgb(0, 0, 0);
+    z-index: 999;
+    transition: ease-out 1s;
+    
+
+}
+#email-mensage{
+    font-size: 1.3vw;
+    display:flex;
+    justify-content: space-around;
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    align-items: center;
+   
+}

@@ -1,0 +1,105 @@
+{% extends "fastFile/layout.html" %}
+{% block title %}
+    fastFile
+{% endblock %}
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'fastFile/index.css'%}">
+{% endblock %}
+{% block body %}
+
+<nav id="nav-query">
+    <search>
+        <form action="{% url 'search' %}" id="form-search-file">
+            <input type="search" placeholder="&#x1F50E; file name" name="q">
+        </form>
+    </search>
+    
+</nav>
+
+<dialog>
+    <div class="div-dialog-title">
+        <h5>password is nescessary</h5>
+        
+    </div>
+        <form action="{% url 'requests' %}" id="password-form">
+            <input type="password" placeholder="*************" required autofocus autocomplete="off">
+            <input type="submit">
+        </form>
+</dialog>
+<dialog id="alert-email">
+    <span id="email-mensage"></span>
+</dialog>
+{% if message %}
+
+<div class="div-error-login">
+    <span class="error-login">{{message}}</span>
+</div>
+{% endif %}
+<div id="div-links">
+{% for file in page.object_list %}
+
+    <article>
+    <a class="link-file" href="{% url 'fileName' fileName=file.name %}">
+            <h3>{{file.name}}</h3>
+    </a>
+    <div class="infos">
+        <span><a href="{% url 'perfil' username=file.postedBy.username %}">{{file.postedBy}}</a></span>  <span>{{file.postedAt}}</span> <span>{{file.downloadsCount}}</span>
+    </div> 
+    <div class="infos">
+        <div class="requireds">
+        {% if file.password is  not None  %}
+            {% if request.user not in file.allowedUsers.all  %}
+                <span class="lock">&#128274;</span>
+            {% else%}           
+                <span>&#10003;</span>
+            {% endif%}
+        {% endif %}
+        </div>
+        <div class="requireds">
+        {% if file.userPermition %}
+            {% if request.user not in file.allowedUsers.all  %}
+                {% if request.user not in file.messages.all %}
+                    <button class="request-button">request</button>
+                {% else%}
+                    <span>made request</span>
+                {% endif %}
+            {% else%}
+                <span>&#10003;</span>
+                
+            {% endif%}
+            
+        {% endif %}
+        </div>
+    </div>
+    </article>
+
+
+{% empty %}
+
+{% endfor %}
+</div>
+
+<nav aria-label="Page navigation example" id="nav-pages">
+    <ul class="pagination">
+    {% if page.has_previous %}
+        <li class="page-item"><a class="page-link" href="{% url 'index' %}?page={{page.previous_page_number}}">Previous</a></li>
+    {% endif %}
+        {% for i in linkPages %}
+    
+            <li class="page-item"><a class="page-link" href="{% url 'index' %}?page={{i}}">{{i}}</a></li>
+        
+        {% endfor %}
+    {% if page.has_next %}
+        <li class="page-item"><a class="page-link" href="{% url 'index' %}?page={{page.next_page_number}}">Next</a></li>
+    {% endif %}
+    </ul>
+</nav>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'fastFile/js/requests.js' %}"></script>
+
+{% endblock %}

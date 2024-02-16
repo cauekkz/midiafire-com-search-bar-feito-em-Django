@@ -1,0 +1,87 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        {% block meta %}
+        {% endblock %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'fastFile/styles.css' %}" rel="stylesheet">
+        {% block style %}
+
+        {% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{% url 'index' %}"><span id="fast-span">Fast</span><span id="file-span">File</span></a>
+          
+            <div>
+              <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfil' username=request.user.username %}">Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'upload' %}"><strong>Upload</strong></a>
+                    </li>
+                    <li class="nav-item" id="inbox-li">
+                        {% if inbox %}
+                        <strong class="nav-link"  id="inbox-icon" style="cursor: pointer;">&#128231;</strong>
+                        <dialog id="inbox">
+                            {% for upload in uploads %}
+                                {% for defendant in upload.messages.all  %}
+                                <article>
+                                    <div class="span-request">
+                                    <span id="span-name-user">{{defendant.username}}</span> <b style="display: inline;">request</b> <span id="span-name-file">{{upload.name}}</span>
+                                    </div>
+                                    <div class="div-request">
+                                        <button class="btn-decision" style="color: greenyellow;" data-decision="true"><b>&#10003;</b></button>
+                                        <button class="btn-decision" style="color: red;" data-decision="false"><b>X</b></button>
+                                    </div>
+                                </article>
+                                    
+                                    
+                                {% endfor %}
+                                
+                                {% empty %}
+                                    
+                            {% endfor %}
+                        </dialog>
+                        {% endif %}
+                    </li>
+                   
+                    
+                {% endif %}
+                <li class="nav-item">
+                  
+                    
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+              </ul>
+            </div>
+        </nav>
+        
+        <main>
+            {% block body %}
+                
+            
+            {% endblock %}
+        </main>
+        
+   
+        {% block script %}
+        {% endblock %}
+    </body>
+</html>

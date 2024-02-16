@@ -1,0 +1,45 @@
+{% extends "fastFile/layout.html" %}
+{% block title %}
+    upload
+{% endblock %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'fastFile/upload.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id="div-form-upload">
+        
+        <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data" id="form-upload">
+            {% csrf_token %}
+       
+            {% if message %}
+                <span class="error-login">{{message}}</span>
+            {% endif %}
+            <div class="div-input">
+                <label  for="fileName">file name</label>
+                <input autofocus required class="form-control" id="fileName" type="text" name="fileName" placeholder="file name">
+            </div>
+            <div class="div-input">
+                <label  for="password" ><abbr title="Users need a password to download; if you don't enter it, a password is not required to download">password</abbr></label>
+                <input  class="form-control" id="password" type="password" name="password" placeholder="password ">
+            </div>
+            <div class="div-input">
+                <label  for="confirmation" > password confirmation</label>
+                <input  class="form-control" id="confirmation" type="password" name="confirmation" placeholder="password">
+            </div>
+            <div id="div-input-file">
+                <label for="file"><img src="{% static 'fastFile/images/file.png' %}" alt="file-image"></label>
+                <input required id="file" type="file" name="file">
+            </div>
+            <div id="div-input-checkbox">
+                <label for="CP"><abbr title="allows users to send requests to download your file">creator's permission</abbr></label>
+                <input type="checkbox" name="creatorPermition" id="CP" >
+            </div>
+            <div id="div-button">
+                <button type="submit">upload</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

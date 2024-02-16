@@ -1,0 +1,93 @@
+body{
+    background-color: rgb(9, 121, 133);
+}
+main{
+    height: calc(100vh - 56px);
+    padding: 15px 15px   0 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#div-form-upload{
+    
+    width: 40%;
+    border-radius: 10px;
+    height: 90%;
+    background-color: rgb(215, 146, 18);  
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.111), 2px 2px 5px black;
+    padding: 5px;
+    
+}
+#form-upload{
+    height: 100%;
+    width: 100%;
+    font-size: larger;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#div-input-file
+{
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0 5px 0;
+    
+}
+
+label[for='file']{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(16, 119, 154);
+    border: 2px solid rgb(29, 100, 136);
+    cursor: pointer;
+    border-radius: 10px;
+    height: 100%;
+    width: 50%;
+    padding: 5px;
+
+}
+label[for='file']:hover{
+    background-color:rgb(39, 86, 95) ;
+    
+}
+#form-upload  input[type='file'] {
+    display: none;
+}
+img{
+    display: block;
+    width: 25%;
+    filter: opacity(0.5);
+}
+
+#div-input-checkbox{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+input[type="checkbox"] {
+    border: 3 solid black;
+    
+}
+
+#div-button{
+    display:flex;
+    justify-content: center;
+    
+}
+button {
+    
+    transition-duration: 0.4s;
+    width: 50%;
+    border-radius: 5px;
+    background-color: rgb(51, 143, 162);
+    color: black
+}
+button:hover {
+    background-color: rgb(9, 121, 133); 
+    color: white;
+}
+

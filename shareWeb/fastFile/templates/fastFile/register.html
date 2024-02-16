@@ -1,0 +1,37 @@
+{% extends "fastFile/layout.html" %}
+{% block title %}
+    Register
+{% endblock %}
+{% load static %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'fastFile/login.css'%}">
+{% endblock %}
+{% block body %}
+<div id="div-form-login">
+    <h1>Register</h1>
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+       
+        {% if message%}
+            <span class="error-login">{{message}}</span>
+        {% endif %}
+        <div class="form-group">
+            <label  for="username">username</label>
+            <input autofocus required class="form-control" id="username" type="text" name="username" placeholder="username">
+        </div>
+        <div class="form-group">
+            <label  for="email">email</label>
+            <input required class="form-control" id="email" type="email" name="email" placeholder="email">
+        </div>
+        <div class="form-group">
+            <label for="password">password</label>
+            <input class="form-control" required id="password" type="password" name="password" placeholder="password">
+        </div>
+        <div class="form-group">
+            <label for="confirmation">confirmation password</label>
+            <input class="form-control" required id="confirmation" type="password" name="confirmation" placeholder="password">
+        </div>
+        <button  type="submit" >Register</button>        
+    </form>
+</div>
+{% endblock %}
