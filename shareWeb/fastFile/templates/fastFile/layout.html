@@ -25,8 +25,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'upload' %}"><strong>Upload</strong></a>
                     </li>
-                    <li class="nav-item" id="inbox-li">
+                    
                         {% if inbox %}
+                    <li class="nav-item" id="inbox-li">
                         <strong class="nav-link"  id="inbox-icon" style="cursor: pointer;">&#128231;</strong>
                         <dialog id="inbox">
                             {% for upload in uploads %}
@@ -48,8 +49,13 @@
                                     
                             {% endfor %}
                         </dialog>
-                        {% endif %}
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'settings' %}"><b>&#9881;</b></a>
+                    </li> 
+                        {% endif %}
+                    
+                    
                    
                     
                 {% endif %}

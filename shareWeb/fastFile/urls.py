@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 urlpatterns = [
-    #feito
     path('', views.index, name='index'),
     path('register', views.register, name='register'),
     path('login', views.login_view, name='login'),
@@ -13,6 +12,7 @@ urlpatterns = [
     path('file/<str:fileName>', views.fileName, name='fileName'),
     path('allowUser',views.allowUser, name='allowUser'),
     path('perfil/<str:username>', views.perfil, name='perfil'),
-    path('search', views.search, name='search')
+    path('search', views.search, name='search'),
+    path('settings', views.settings_perfil, name='settings')
     
 ]

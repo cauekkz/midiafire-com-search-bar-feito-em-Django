@@ -33,7 +33,6 @@ def index(request):
                 'linkPages':pageLinks
             })
     
-
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -203,18 +202,21 @@ def perfil(request,username):
         page, pageLinks =  util.nav_page( number ,File.objects.filter(postedBy=user).order_by('-downloadsCount'))
         if pageLinks is None and page is not None:
             return render(request, "fastFile/perfil.html",{
+                'user':user,
                 'inbox':inbox,
                 'page':page,
                 'uploads': uploads
             })
         elif pageLinks is None and page is None:
             return render(request, "fastFile/perfil.html", {
+                'user':user,
                 'inbox':inbox,
                 "message": 'Page not exist',
                 'uploads': uploads 
             })
         else:
             return render(request,"fastFile/perfil.html",{
+                'user':user,
                 'inbox':inbox,
                 'page':page,
                 'linkPages':pageLinks,
@@ -293,10 +295,13 @@ def upload(request):
     
     return redirect('fileName', fileName=fileName)
 
+@login_required
+def settings_perfil(request):
+    if request.method == "GET":
+
+        return render(request,'fastFile/settings.html')
 #APIs
-
 #user can request permition to download the file
-
 @login_required
 def requests(request):
     if request.method != "POST":
