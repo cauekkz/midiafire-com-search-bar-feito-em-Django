@@ -4,6 +4,10 @@ settings
 {% endblock %}
 {% load static %}
 
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
 {% block style %}
     <link rel="stylesheet" href="{% static 'fastFile/css/styles.css'%}">
     <link rel="stylesheet" href="{% static 'fastFile/css/settings.css'%}">
@@ -11,12 +15,66 @@ settings
 
 {% block body %}
 <h1>Edit</h1>
+    {% if message %}
+        <span>{{message}}</span>
+    {% endif %}
 
     <menu>
-        <li class="li-settings">name</li>
-        <li class="li-settings">password</li>
-        <li class="li-settings">email</li>
-        <li class="li-settings">delete perfil</li>
+        <li class="li-settings" data-edit="name">name</li>
+        <dialog class="form-dialog" id="dialog-name">
+            <form action="{% url 'settings' %}" method="post">
+                <input required type="hidden" name="decision" value="username">
+
+                <label for="username-input">new username</label>
+                <input required type="text" id="username-input" name="change" placeholder="new username">
+                <label for="password-1">password</label>
+                <input required type="password" id="password-1" name="password-hash" placeholder="password">
+                {% csrf_token %}
+                <input type="submit">
+            </form>
+        </dialog>
+        <li class="li-settings"data-edit='password'>password</li>
+        <dialog class="form-dialog" id="dialog-password">
+            <form action="{% url 'settings' %}" method="post">
+                <input required type="hidden" name="decision" value="password">
+
+                <label for="password-input">new password</label>
+                <input required type="password" id="password-input" name="change" placeholder="new password">
+                <label for="password-2">password</label>
+                <input required type="password" id="password-2" name="password-hash" placeholder="password">
+                {% csrf_token %}
+                
+                <input type="submit">
+
+            </form>
+        </dialog>
+        <li class="li-settings" data-edit="email">email</li>
+        <dialog class="form-dialog" id="dialog-email">
+            <form action="{% url 'settings' %}" method="post">
+                <input required type="hidden" name="decision" value="email">
+
+                <label for="email-input">new email</label>
+                <input required type="email" id="email-input" name="change" placeholder="new email">
+                <label for="password-3">password</label>
+                <input required type="password" id="password-3" name="password-hash" placeholder="password">
+                {% csrf_token %}
+                <input type="submit">
+
+            </form>
+        </dialog>
+        <li class="li-settings" data-edit="delete">delete perfil</li>
+        <dialog class="form-dialog" id="dialog-delete">
+            <form action="{% url 'settings' %}" method="post">
+                <input required type="hidden" name="change" value="delete">
+                <input required type="hidden" name="decision" value="delete">
+
+                <label for="password-4">password</label>
+                <input required type="password" id="password-4" name="password-hash" placeholder="password">
+                {% csrf_token %}
+                <input type="submit">
+
+            </form>
+        </dialog>
     </menu>
     <footer>
         

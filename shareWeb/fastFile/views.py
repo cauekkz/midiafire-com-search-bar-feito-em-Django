@@ -298,8 +298,47 @@ def upload(request):
 @login_required
 def settings_perfil(request):
     if request.method == "GET":
-
         return render(request,'fastFile/settings.html')
+    DECISIONS = ['username','password','email','delete']
+    decision = request.POST.get('decision', None)
+    
+    if decision not in DECISIONS:
+        return render(request,'fastFile/settings.html',{
+            'message':'decision not allow'
+        })
+    password = request.POST.get('password-hash') 
+    user = User.objects.get(pk=request.user.id)
+    
+
+    if check_password(password,user.password):
+        
+        if decision != 'delete':
+            change = request.POST.get('change', None)
+            
+            if decision == 'username' or decision == 'email':
+                if User.objects.filter(Q(username=change) | Q(email=change)).exists():
+                    return render(request,'fastFile/settings.html',{
+                        'message':f'This {decision} exist'
+                    })
+
+           
+            setattr(user, decision, change) if decision != 'password' else user.set_password(change)
+            user.save()
+            return render(request,'fastFile/settings.html',{
+                        'message':f' change {decision} '
+            })
+        uploads = user.posteds.all()
+        for upload in uploads:
+            if upload.file.path:
+                upload.file.delete(save=False)
+            upload.delete()
+        user.delete()
+        return redirect('index')
+
+    else:
+        return render(request,'fastFile/settings.html',{
+            'message':'wrong password'
+        })
 #APIs
 #user can request permition to download the file
 @login_required

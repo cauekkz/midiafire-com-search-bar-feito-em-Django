@@ -2,5 +2,5 @@
 db.sqlite3
 
 fastFile/migrations/*
+fastFile/__pycache__/*
 
-.gitignore
