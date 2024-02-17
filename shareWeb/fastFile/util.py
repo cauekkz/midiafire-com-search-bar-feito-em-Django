@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-
+from .models import *
 def nav_page(number,posts):
     pages = Paginator(posts,13)
          
@@ -27,4 +27,18 @@ def nav_page(number,posts):
         
     return page, pageLinks
 
-
+def check_inputs(type,input):
+    match type:
+        case 'password':
+            if len(input) < 8:
+                return False
+        case 'username':
+            if User.objects.filter(username=input).exists():
+                return False
+        case 'email':
+            if User.objects.filter(email=input).exists():
+                return False
+        case _:
+            return False
+        
+    return True

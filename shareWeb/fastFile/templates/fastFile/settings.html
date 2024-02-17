@@ -64,10 +64,9 @@ settings
         </dialog>
         <li class="li-settings" data-edit="delete">delete perfil</li>
         <dialog class="form-dialog" id="dialog-delete">
-            <form action="{% url 'settings' %}" method="post">
+            <form action="{% url 'settings' %}" method="post" >
                 <input required type="hidden" name="change" value="delete">
                 <input required type="hidden" name="decision" value="delete">
-
                 <label for="password-4">password</label>
                 <input required type="password" id="password-4" name="password-hash" placeholder="password">
                 {% csrf_token %}

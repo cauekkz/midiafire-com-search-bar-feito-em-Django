@@ -60,9 +60,10 @@ def register(request):
         email = request.POST['email']
         password = request.POST['password']
         confirmation = request.POST['confirmation']
-        if password != confirmation:
+        #
+        if password != confirmation or len(password) < 8:
             return render(request,'fastFile/register.html',{
-                'message':'The passwords must match'
+                'message':'The passwords must match and/or Password must be 8 chars'
             })
         
         userExist = User.objects.filter(Q(username=username) | Q(email=email))
@@ -315,18 +316,23 @@ def settings_perfil(request):
         if decision != 'delete':
             change = request.POST.get('change', None)
             
-            if decision == 'username' or decision == 'email':
-                if User.objects.filter(Q(username=change) | Q(email=change)).exists():
+            if not util.check_inputs(decision,change):
+                if decision == 'email' or decision == 'username':
                     return render(request,'fastFile/settings.html',{
                         'message':f'This {decision} exist'
                     })
+                else:
+                    return render(request,'fastFile/settings.html',{
+                        'message':'Password must be 8 chars'
+                    })
 
-           
             setattr(user, decision, change) if decision != 'password' else user.set_password(change)
             user.save()
+            login(request,user)
             return render(request,'fastFile/settings.html',{
                         'message':f' change {decision} '
             })
+        #delete perfil 
         uploads = user.posteds.all()
         for upload in uploads:
             if upload.file.path:
