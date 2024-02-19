@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.paginator import Paginator
+from django.core.cache import cache
 
 from .models import *
 
@@ -194,11 +195,14 @@ def perfil(request,username):
         user = user.first()
         if request.user == user:
             inbox = True
-            uploads = user.posteds.all()     
-                
+            key = f'messages_{user.id}'
+            messages = cache.get(key)
+            if messages is None:
+                messages = user.objects.all()
+                cache.set(key, messages, 60 * 20) 
         else:
             inbox = False
-            uploads = False
+            messages = False
 
         page, pageLinks =  util.nav_page( number ,File.objects.filter(postedBy=user).order_by('-downloadsCount'))
         if pageLinks is None and page is not None:
@@ -206,14 +210,14 @@ def perfil(request,username):
                 'user':user,
                 'inbox':inbox,
                 'page':page,
-                'uploads': uploads
+                'messages': messages
             })
         elif pageLinks is None and page is None:
             return render(request, "fastFile/perfil.html", {
                 'user':user,
                 'inbox':inbox,
                 "message": 'Page not exist',
-                'uploads': uploads 
+                'messages': messages 
             })
         else:
             return render(request,"fastFile/perfil.html",{
@@ -221,7 +225,7 @@ def perfil(request,username):
                 'inbox':inbox,
                 'page':page,
                 'linkPages':pageLinks,
-                'uploads': uploads
+                'messages': messages
             })
 
 @login_required
@@ -394,17 +398,15 @@ def requests(request):
             alert = RequestMessage.objects.create(
                 caller = request.user,
                 reciver = file.postedBy,
-                file = file
+                file = file,
                 message = f" Can {request.user.username}  download your {file.name} file?",
-                
-            )
+                )
             alert.save()
             return JsonResponse({"respost":"ok"}, status=200)
         else:
             return JsonResponse({"respost":"This file not exist"}, status=404)
-        
 
-#admin can allow users
+#Author can allow users
 @login_required
 def allowUser(request):
     if request.method != "POST":
@@ -412,39 +414,4 @@ def allowUser(request):
     data = json.loads(request.body)
     title = data.get('name')
     decision = bool(data.get('decision'))
-
     
-    file = File.objects.filter(name=title)
-    if file.exists():
-        file = file.first()
-        if file.postedBy == request.user:
-            username = data.get('username')
-            defendant = User.objects.filter(username=username)
-            
-            if defendant.exists():
-                defendant = defendant.first()
-                if decision:
-                    if defendant not in file.allowedUsers.all():
-                        file.allowedUsers.add(defendant)
-                        file.messages.remove(defendant)
-                        file.save()
-                        return JsonResponse({"respost":"made"}, status=200)
-                    else:
-                         
-                         file.messages.remove(defendant)
-                         file.save()
-                         return JsonResponse({"respost":"He already has permission"}, status=302)
-                else:
-                    if defendant in file.messages.all():
-                        file.allowedUsers.remove(defendant)
-                        file.messages.remove(defendant)
-                        file.save()
-                        return JsonResponse({"respost":"made"}, status=200)
-                    
-            else:
-                return JsonResponse({"respost":"This user not exist "}, status=404)
-        else:
-            return JsonResponse({"respost":"You are not the author "}, status=203)
-    else:
-        return JsonResponse({"respost":"This file not exist "}, status=404)
-
