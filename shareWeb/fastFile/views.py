@@ -390,10 +390,15 @@ def requests(request):
             if request.user in file.messages.all():
 
                 return JsonResponse({"respost":"made"}, status=200)
-
             
-            file.messages.add(request.user)
-            file.save()
+            alert = RequestMessage.objects.create(
+                caller = request.user,
+                reciver = file.postedBy,
+                file = file
+                message = f" Can {request.user.username}  download your {file.name} file?",
+                
+            )
+            alert.save()
             return JsonResponse({"respost":"ok"}, status=200)
         else:
             return JsonResponse({"respost":"This file not exist"}, status=404)

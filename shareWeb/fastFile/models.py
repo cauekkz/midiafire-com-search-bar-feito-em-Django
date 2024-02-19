@@ -25,4 +25,4 @@ class Message(models.Model):
     seen = models.BooleanField(default=False)
 
 class RequestMessage(Message):
-    file  = models.ForeignKey(File)
+    file  = models.ForeignKey(File, on_delete=models.CASCADE)
