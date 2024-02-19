@@ -368,7 +368,10 @@ def requests(request):
             if check_password(password,file.password):
                 file.allowedUsers.add(request.user)
                 file.save()
-                
+                Message.objects.create(
+                    caller = request.user,
+                    
+                )
                 return JsonResponse({"respost":"ok"}, status=202)
             else:
                 return JsonResponse({"respost":"password incorrect"}, status=200)

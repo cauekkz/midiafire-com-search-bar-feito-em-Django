@@ -23,4 +23,5 @@ class Message(models.Model):
     message = models.CharField(max_length=200)
     request = models.BooleanField(default=False)
     sendAt = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
 
