@@ -51,10 +51,10 @@
     </div> 
     <div class="infos">
         <div class="requireds">
-        {% if file.password is  not None  %}
+        {% if file.password != ''  %}
             {% if request.user not in file.allowedUsers.all  %}
                 <span class="lock">&#128274;</span>
-            {% else%}           
+            {% else %}           
                 <span>&#10003;</span>
             {% endif%}
         {% endif %}

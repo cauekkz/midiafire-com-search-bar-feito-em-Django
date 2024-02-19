@@ -189,19 +189,16 @@ def perfil(request,username):
         number = request.GET.get('page')
         user = User.objects.filter(username=username)
         if not user.exists():
-            return render(request, "fastFile/perfil.html", {
-                "message": 'user not exist'  
-            })
+            return render(request, "fastFile/perfil.html")
         user = user.first()
         if request.user == user:
             inbox = True
-
             messages = user.messages.all()
             
         else:
+            
             inbox = False
             messages = False
-
         page, pageLinks =  util.nav_page( number ,File.objects.filter(postedBy=user).order_by('-downloadsCount'))
         if pageLinks is None and page is not None:
             return render(request, "fastFile/perfil.html",{
@@ -389,15 +386,12 @@ def requests(request):
             file = file.first()
             if request.user in file.allowedUsers.all():
                 return JsonResponse({"respost":"has permission"}, status=200)
-            if request.user in file.messages.all():
-
-                return JsonResponse({"respost":"made"}, status=200)
             
             alert = RequestMessage.objects.create(
                 caller = request.user,
                 reciver = file.postedBy,
                 file = file,
-                message = f" Can {request.user.username}  download your {file.name} file?",
+                message = f'Can {request.user.username}  download your "{file.name}" file?',
                 )
             alert.save()
             return JsonResponse({"respost":"ok"}, status=200)

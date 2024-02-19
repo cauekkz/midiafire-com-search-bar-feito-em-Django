@@ -37,10 +37,14 @@
                                             <span>{{message.sendAt}}</span>
                                             <span id="span-name-user">{{message.message}}</span>
                                             </div>
-                                            {% if message.file %}
+                                            {% if message.file.id is not None %}
                                                 <div class="div-request">
-                                                    <button class="btn-decision" style="color: greenyellow;" data-decision="true"><b>&#10003;</b></button>
-                                                    <button class="btn-decision" style="color: red;" data-decision="false"><b>X</b></button>
+                                                    <button class="btn-decision" style="color: greenyellow;" data-decision="true">
+                                                        <b>&#10003;</b>
+                                                    </button>
+                                                    <button class="btn-decision" style="color: red;" data-decision="false">
+                                                        <b>X</b>
+                                                    </button>
                                                 </div>
                                             {% endif %}
                                         </article>

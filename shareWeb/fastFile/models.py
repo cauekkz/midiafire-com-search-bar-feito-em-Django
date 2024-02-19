@@ -12,7 +12,7 @@ class File(models.Model):
     postedBy = models.ForeignKey(User, related_name='posteds', on_delete=models.CASCADE)
     file = models.FileField(upload_to='uploads/')
     postedAt = models.DateTimeField(auto_now_add=True)
-    password = models.CharField(max_length=100, default='')
+    password = models.CharField(max_length=100)
     userPermition = models.BooleanField(default=False)
     allowedUsers = models.ManyToManyField(User, related_name='allowedFiles')
     downloadsCount = models.IntegerField(default=0)
@@ -23,6 +23,6 @@ class Message(models.Model):
     message = models.CharField(max_length=200)
     sendAt = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
-    
+
 class RequestMessage(Message):
     file  = models.ForeignKey(File, on_delete=models.CASCADE)
