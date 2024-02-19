@@ -63,11 +63,9 @@
             <div class="requireds">
             {% if file.userPermition %}
                 {% if request.user not in file.allowedUsers.all  %}
-                    {% if request.user not in file.messages.all %}
+                    
                     <button class="request-button">request</button>
-                    {% else%}
-                        <span>made request</span>
-                    {% endif %}
+                    
                 {% else%}
                     <span>&#10003;</span>
                     

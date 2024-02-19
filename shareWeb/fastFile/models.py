@@ -23,6 +23,6 @@ class Message(models.Model):
     message = models.CharField(max_length=200)
     sendAt = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
-
+    
 class RequestMessage(Message):
     file  = models.ForeignKey(File, on_delete=models.CASCADE)
