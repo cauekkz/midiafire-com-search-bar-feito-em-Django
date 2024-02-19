@@ -195,11 +195,9 @@ def perfil(request,username):
         user = user.first()
         if request.user == user:
             inbox = True
-            key = f'messages_{user.id}'
-            messages = cache.get(key)
-            if messages is None:
-                messages = user.objects.all()
-                cache.set(key, messages, 60 * 20) 
+
+            messages = user.messages.all()
+            
         else:
             inbox = False
             messages = False
