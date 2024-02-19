@@ -367,11 +367,13 @@ def requests(request):
                 
             if check_password(password,file.password):
                 file.allowedUsers.add(request.user)
-                file.save()
-                Message.objects.create(
+                alert = Message.objects.create(
                     caller = request.user,
-                    
+                    reciver = file.postedBy,
+                    message = f"{request.user.username} can download your {file.name} file",
                 )
+                alert.save()
+                file.save()
                 return JsonResponse({"respost":"ok"}, status=202)
             else:
                 return JsonResponse({"respost":"password incorrect"}, status=200)
@@ -386,8 +388,10 @@ def requests(request):
             if request.user in file.allowedUsers.all():
                 return JsonResponse({"respost":"has permission"}, status=200)
             if request.user in file.messages.all():
+
                 return JsonResponse({"respost":"made"}, status=200)
 
+            
             file.messages.add(request.user)
             file.save()
             return JsonResponse({"respost":"ok"}, status=200)

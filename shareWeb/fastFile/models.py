@@ -21,7 +21,8 @@ class Message(models.Model):
     caller = models.ForeignKey(User, related_name='sends', on_delete=models.CASCADE, null=True)
     reciver = models.ForeignKey(User,related_name='messages',on_delete=models.CASCADE)
     message = models.CharField(max_length=200)
-    request = models.BooleanField(default=False)
     sendAt = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
 
+class RequestMessage(Message):
+    file  = models.ForeignKey(File)
