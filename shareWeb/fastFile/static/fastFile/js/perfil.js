@@ -16,9 +16,13 @@ document.querySelector('#inbox-icon').onclick = function(){
 } 
 document.querySelectorAll('.btn-decision').forEach(function(btn){
     btn.onclick = function(){
-        const id = this.closest('article').dataset.id
+        const article = this.closest('article')
+        const id = article.dataset.id
         const allow = Boolean(this.dataset.decision)
         const csrfToken = document.querySelector('[name=csrf-token]').content
+        const requestUser = String(article.dataset.user)
+
+        
         fetch('/allowUser', {
             method: 'POST',
             headers: {
@@ -28,10 +32,12 @@ document.querySelectorAll('.btn-decision').forEach(function(btn){
 
             body: JSON.stringify({
                 id : id,
-                decision: allow
+                decision: allow,
+                caller: requestUser
             })
           }).then(response =>response.json()).then(result =>{
-                if(result.respost === 'made' || result.respost === 'He already has permission')
+                
+                if(result.respost === 'made')
                 {
                     article.style.display = 'none'
 
@@ -43,5 +49,7 @@ document.querySelectorAll('.btn-decision').forEach(function(btn){
                 
             
           })
+          
     }
+    
 })

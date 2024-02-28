@@ -407,8 +407,47 @@ def requests(request):
 @login_required
 def allowUser(request):
     if request.method != "POST":
-        return JsonResponse({"respost":"POST required "}, status=405)
+        return JsonResponse({"respost":"POST required"}, status=405)
     data = json.loads(request.body)
-    title = data.get('name')
+    idUpload = int(data.get('id'))
     decision = bool(data.get('decision'))
+    userMessages = request.user.requestsMessages.all()
+    ids = []
+    for message in userMessages:
+        ids.append(message.id)
+
+    if idUpload in ids:
+        rqst = userMessages.filter(id=idUpload)
+        if rqst.exists():
+            caller = data.get('caller')
+            print(caller)
+            caller = User.objects.get(username=caller)
+
+            rqst = rqst.first()
+            if decision:
+                file = rqst.file
+                file.allowedUsers.add(caller)
+
+                message = Message(
+                    caller=request.user,
+                    reciver=caller,
+                    message=f'{request.user.username} acept your request to {rqst.file.name} file'
+                )
+                message.save()
+                print("nice")
+            else:
+                message = Message(
+                    caller=request.user,
+                    reciver= caller,
+                    message=f'{request.user.username} rejected your request to {rqst.file.name} file'
+                )
+                print("delete")
+                message.save()
+                
+            rqst.delete()
+            return JsonResponse({"respost":"made"}, status=200)
+        else:
+            return JsonResponse({"respost":"this id not exist"}, status=400)
+    else:
+        return JsonResponse({"respost":"id is not your"}, status=401)
     

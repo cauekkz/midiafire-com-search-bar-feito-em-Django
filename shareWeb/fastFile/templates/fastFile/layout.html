@@ -31,7 +31,7 @@
                                 <strong class="nav-link"  id="inbox-icon" style="cursor: pointer;">&#128231;</strong>
                                 <dialog id="inbox">
                             {% for rqst in requests%}
-                                <article data-id="message.id">
+                                <article data-id="{{rqst.id}}" data-user="{{rqst.caller.username}}">
                                     
                                     <div class="span-request">
                                         <span>{{rqst.sendAt}}</span>
