@@ -193,10 +193,9 @@ def perfil(request,username):
         user = user.first()
         if request.user == user:
             inbox = True
-            requests = None
+            requests = user.requestsMessages.all()
             messages = user.messages.all()
-            for message in messages:
-                print(message.message)
+            
             
         else:
             
