@@ -16,11 +16,9 @@ document.querySelector('#inbox-icon').onclick = function(){
 } 
 document.querySelectorAll('.btn-decision').forEach(function(btn){
     btn.onclick = function(){
-        const article = this.closest('article')
+        const id = this.closest('article').dataset.id
         const allow = Boolean(this.dataset.decision)
         const csrfToken = document.querySelector('[name=csrf-token]').content
-        const title = article.querySelector('#span-name-file').innerText
-        const username = article.querySelector('#span-name-user').innerText
         fetch('/allowUser', {
             method: 'POST',
             headers: {
@@ -29,10 +27,8 @@ document.querySelectorAll('.btn-decision').forEach(function(btn){
             },
 
             body: JSON.stringify({
-                name : title,
-                decision : allow,
-                username : username
-
+                id : id,
+                decision: allow
             })
           }).then(response =>response.json()).then(result =>{
                 if(result.respost === 'made' || result.respost === 'He already has permission')

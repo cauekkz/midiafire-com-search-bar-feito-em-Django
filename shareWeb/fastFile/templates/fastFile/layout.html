@@ -34,8 +34,8 @@
                                 <article data-id="message.id">
                                     
                                     <div class="span-request">
-                                    <span>{{message.sendAt}}</span>
-                                    <span id="span-name-user">{{message.message}}</span>
+                                        <span>{{rqst.sendAt}}</span>
+                                        <span>{{rqst.message}}</span>
                                     </div>
 
                                     <div class="div-request">
@@ -48,14 +48,14 @@
                                     </div>
 
                                 </article>
-                                
+
                             {% endfor %}
                             {% for message in messages %}
 
                                         <article data-id="message.id">
                                             <div class="span-request">
                                             <span>{{message.sendAt}}</span>
-                                            <span id="span-name-user">{{message.message}}</span>
+                                            <span class="span-name-user">{{message.message}}</span>
                                             </div>
                                         </article>
                             
@@ -66,9 +66,11 @@
                             {% endfor %}
                                 </dialog>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'settings' %}"><b>&#9881;</b></a>
                             </li> 
+                            
                         {% endif %}
                     
                     
