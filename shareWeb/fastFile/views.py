@@ -193,7 +193,10 @@ def perfil(request,username):
         user = user.first()
         if request.user == user:
             inbox = True
+            requests = None
             messages = user.messages.all()
+            for message in messages:
+                print(message.message)
             
         else:
             
@@ -205,14 +208,16 @@ def perfil(request,username):
                 'user':user,
                 'inbox':inbox,
                 'page':page,
-                'messages': messages
+                'messages': messages,
+                'requests':requests
             })
         elif pageLinks is None and page is None:
             return render(request, "fastFile/perfil.html", {
                 'user':user,
                 'inbox':inbox,
                 "message": 'Page not exist',
-                'messages': messages 
+                'messages': messages,
+                'requests':requests
             })
         else:
             return render(request,"fastFile/perfil.html",{
@@ -220,7 +225,8 @@ def perfil(request,username):
                 'inbox':inbox,
                 'page':page,
                 'linkPages':pageLinks,
-                'messages': messages
+                'messages': messages,
+                'requests':requests
             })
 
 @login_required

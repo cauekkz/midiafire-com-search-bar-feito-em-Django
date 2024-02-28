@@ -17,12 +17,20 @@ class File(models.Model):
     allowedUsers = models.ManyToManyField(User, related_name='allowedFiles')
     downloadsCount = models.IntegerField(default=0)
 
-class Message(models.Model):
-    caller = models.ForeignKey(User, related_name='sends', on_delete=models.CASCADE, null=True)
-    reciver = models.ForeignKey(User,related_name='messages',on_delete=models.CASCADE)
+class MessageCommonInfos(models.Model):
     message = models.CharField(max_length=200)
     sendAt = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
+    class Meta:
+        abstract = True
+    
+class Message(MessageCommonInfos):
+    caller = models.ForeignKey(User, related_name='sends', on_delete=models.CASCADE, null=True)
+    reciver = models.ForeignKey(User,related_name='messages',on_delete=models.CASCADE)
 
-class RequestMessage(Message):
+class RequestMessage(MessageCommonInfos):
+    caller = models.ForeignKey(User, related_name='requestsSends', on_delete=models.CASCADE, null=True)
+    reciver = models.ForeignKey(User,related_name='requestsMessages',on_delete=models.CASCADE)
     file  = models.ForeignKey(File, on_delete=models.CASCADE)
+    
+        
