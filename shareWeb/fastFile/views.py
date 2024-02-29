@@ -411,6 +411,7 @@ def allowUser(request):
     data = json.loads(request.body)
     idUpload = int(data.get('id'))
     decision = bool(data.get('decision'))
+    print(decision)
     userMessages = request.user.requestsMessages.all()
     ids = []
     for message in userMessages:
@@ -420,7 +421,6 @@ def allowUser(request):
         rqst = userMessages.filter(id=idUpload)
         if rqst.exists():
             caller = data.get('caller')
-            print(caller)
             caller = User.objects.get(username=caller)
 
             rqst = rqst.first()
@@ -431,7 +431,7 @@ def allowUser(request):
                 message = Message(
                     caller=request.user,
                     reciver=caller,
-                    message=f'{request.user.username} acept your request to {rqst.file.name} file'
+                    message=f'{request.user.username} accept your request to {rqst.file.name} file'
                 )
                 message.save()
                 print("nice")

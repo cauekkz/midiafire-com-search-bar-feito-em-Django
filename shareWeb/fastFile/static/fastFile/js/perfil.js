@@ -18,7 +18,7 @@ document.querySelectorAll('.btn-decision').forEach(function(btn){
     btn.onclick = function(){
         const article = this.closest('article')
         const id = article.dataset.id
-        const allow = Boolean(this.dataset.decision)
+        const allow = this.dataset.decision
         const csrfToken = document.querySelector('[name=csrf-token]').content
         const requestUser = String(article.dataset.user)
 
