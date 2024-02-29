@@ -1,3 +1,4 @@
+
 document.querySelector('#inbox-icon').onclick = function(){
         
         
@@ -5,12 +6,30 @@ document.querySelector('#inbox-icon').onclick = function(){
         if(modal.open){
             modal.close()
             this.style.filter = 'brightness(100%)'
-            return
+            const csrfToken = document.querySelector('[name=csrf-token]').content
+            fetch('/deleteMessages', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': csrfToken  
+                },
+        
+              }).then(response =>response.json()).then(result =>{
+                if (result == 'deleted'){
+                    document.getElementsByClassName('messagesArticle').forEach(
+                        function(article){
+                            article.style.display='none'
+                        }
+                    )
+                }
+            })
+            
              
         }
         else{  
             this.style.filter = 'brightness(50%)'
-           modal.show()
+            
+            modal.show()
         }
 
 } 

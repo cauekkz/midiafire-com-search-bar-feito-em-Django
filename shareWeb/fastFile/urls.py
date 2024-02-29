@@ -13,6 +13,7 @@ urlpatterns = [
     path('allowUser',views.allowUser, name='allowUser'),
     path('perfil/<str:username>', views.perfil, name='perfil'),
     path('search', views.search, name='search'),
-    path('settings', views.settings_perfil, name='settings')
+    path('settings', views.settings_perfil, name='settings'),
+    path('deleteMessages', views.delete_messages, name='deleteMessages')
     
 ]

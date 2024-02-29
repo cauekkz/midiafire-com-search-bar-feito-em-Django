@@ -411,7 +411,6 @@ def allowUser(request):
     data = json.loads(request.body)
     idUpload = int(data.get('id'))
     decision = bool(data.get('decision'))
-    print(decision)
     userMessages = request.user.requestsMessages.all()
     ids = []
     for message in userMessages:
@@ -434,14 +433,12 @@ def allowUser(request):
                     message=f'{request.user.username} accept your request to {rqst.file.name} file'
                 )
                 message.save()
-                print("nice")
             else:
                 message = Message(
                     caller=request.user,
                     reciver= caller,
                     message=f'{request.user.username} rejected your request to {rqst.file.name} file'
                 )
-                print("delete")
                 message.save()
                 
             rqst.delete()
@@ -450,4 +447,12 @@ def allowUser(request):
             return JsonResponse({"respost":"this id not exist"}, status=400)
     else:
         return JsonResponse({"respost":"id is not your"}, status=401)
+    
+@login_required
+def delete_messages(request):
+    
+    user = request.user
+    messages = Message.objects.filter(reciver=user)
+    messages.delete()
+    return JsonResponse({"respost":"deleted"}, status=200)
     
